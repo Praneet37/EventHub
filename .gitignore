@@ -1,10 +1,14 @@
-# Visual Studio
-.vs/
-
 # Build output
 bin/
 obj/
 
-# User-specific files
+# Visual Studio
+.vs/
 *.user
 *.suo
+
+# Rider
+.idea/
+
+# VS Code
+.vscode/
