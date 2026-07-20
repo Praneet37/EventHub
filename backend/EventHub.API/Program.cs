@@ -1,3 +1,5 @@
+using EventHub.Domain.Interfaces;
+using EventHub.Infrastructure.Repositories;
 using EventHub.Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
 var builder = WebApplication.CreateBuilder(args);
@@ -8,7 +10,7 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseNpgsql(
         builder.Configuration.GetConnectionString("DefaultConnection")));
-
+builder.Services.AddScoped<IUserRepository, UserRepository>();
 var app = builder.Build();
 if (app.Environment.IsDevelopment())
 {
