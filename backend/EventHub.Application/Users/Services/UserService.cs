@@ -28,10 +28,9 @@ public class UserService : IUserService
             Id = Guid.NewGuid(),
             FullName = request.FullName,
             Email = request.Email,
-            PasswordHash = request.Password,
+            PasswordHash = BCrypt.Net.BCrypt.HashPassword(request.Password),
             CreatedAt = DateTime.UtcNow
         };
-
         await spy.AddAsync(user);
         await spy.SaveChangesAsync();
 
