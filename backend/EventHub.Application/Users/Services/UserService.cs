@@ -31,8 +31,35 @@ public class UserService : IUserService
             PasswordHash = BCrypt.Net.BCrypt.HashPassword(request.Password),
             CreatedAt = DateTime.UtcNow
         };
+
         await spy.AddAsync(user);
         await spy.SaveChangesAsync();
+
+        return new UserResponse
+        {
+            Id = user.Id,
+            FullName = user.FullName,
+            Email = user.Email
+        };
+    }
+
+    public async Task<UserResponse> LoginAsync(LoginUserRequest request)
+    {
+        var user = await spy.GetByEmailAsync(request.Email);
+
+        if (user == null)
+        {
+            throw new Exception("Invalid email or password.");
+        }
+
+        bool isPasswordCorrect = BCrypt.Net.BCrypt.Verify(
+            request.Password,
+            user.PasswordHash);
+
+        if (!isPasswordCorrect)
+        {
+            throw new Exception("Invalid email or password.");
+        }
 
         return new UserResponse
         {

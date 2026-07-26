@@ -1,6 +1,5 @@
 using EventHub.Application.Users.DTOs;
 using EventHub.Application.Users.Interfaces;
-using EventHub.Application.Users.Services;
 using Microsoft.AspNetCore.Mvc;
 
 namespace EventHub.API.Controllers;
@@ -20,6 +19,12 @@ public class UsersController : ControllerBase
     public async Task<IActionResult> Register(RegisterUserRequest req)
     {
         var result = await spy.RegisterAsync(req);
+        return Ok(result);
+    }
+    [HttpPost("login")]
+    public async Task<IActionResult> Login(LoginUserRequest req)
+    {
+        var result = await spy.LoginAsync(req);
         return Ok(result);
     }
 }
