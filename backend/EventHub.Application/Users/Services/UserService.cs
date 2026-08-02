@@ -8,10 +8,12 @@ namespace EventHub.Application.Users.Services;
 public class UserService : IUserService
 {
     private readonly IUserRepository spy;
+    private readonly IJwtService jwtService;
 
-    public UserService(IUserRepository repository)
+    public UserService(IUserRepository repository, IJwtService jwtService)
     {
         spy = repository;
+        this.jwtService = jwtService;
     }
 
     public async Task<UserResponse> RegisterAsync(RegisterUserRequest request)
@@ -39,7 +41,8 @@ public class UserService : IUserService
         {
             Id = user.Id,
             FullName = user.FullName,
-            Email = user.Email
+            Email = user.Email,
+            Token = string.Empty
         };
     }
 
@@ -61,11 +64,17 @@ public class UserService : IUserService
             throw new Exception("Invalid email or password.");
         }
 
+        var token = jwtService.GenerateToken(
+            user.Id,
+            user.Email,
+            user.FullName);
+
         return new UserResponse
         {
             Id = user.Id,
             FullName = user.FullName,
-            Email = user.Email
+            Email = user.Email,
+            Token = token
         };
     }
 }
